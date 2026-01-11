@@ -1,0 +1,12 @@
+composer.phar
+src/cache/
+src/tmp/
+src/storage/*.db
+src/storage/*.db-*
+.DS_Store
+.idea/
+.env
+.phpunit.cache/
+.rector/
+vendor/
+*.log

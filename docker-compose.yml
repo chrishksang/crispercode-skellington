@@ -1,0 +1,21 @@
+services:
+  frankenphp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    working_dir: /srv
+    volumes:
+      - "./:/srv:rw"
+      - "./Caddyfile:/etc/frankenphp/Caddyfile:ro"
+      - "sessions:/sessions:rw"
+    env_file:
+      - .env
+    environment:
+      FRANKENPHP_WATCH: "watch"
+
+volumes:
+  sessions:

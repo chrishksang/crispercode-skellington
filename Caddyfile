@@ -1,0 +1,56 @@
+{
+  # Disable automatic HTTPS for local testing on mapped ports
+  auto_https off
+
+  frankenphp {
+    worker {
+      file /srv/src/public/index.php
+      {$FRANKENPHP_WATCH:}
+    }
+  }
+}
+
+:80 {
+  root * /srv/src/public
+
+  # Access logging to stdout for Docker
+  log {
+    output stdout
+    format json
+  }
+
+  # Enable gzip compression
+  encode gzip
+
+  # Remove headers that reveal server info
+  header {
+    -X-Powered-By
+    -Server
+  }
+
+  # Handle 5xx errors with static error page
+  handle_errors {
+    @5xx expression {http.error.status_code} >= 500
+    handle @5xx {
+      root * /srv/src/static
+      rewrite * /500.html
+      file_server
+    }
+  }
+
+  # Static asset routing
+  @static_assets {
+    path /static/*
+  }
+  handle @static_assets {
+    uri strip_prefix /static
+    root * /srv/src/static
+    header Cache-Control "public, max-age=2592000, immutable"
+    file_server
+  }
+
+  # PHP handling with worker mode
+  php_server {
+    index index.php
+  }
+}

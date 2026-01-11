@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ruleset name="CrisperCode Coding Standard">
+    <description>Coding standard based on PSR-12</description>
+
+    <!-- Use PSR-12 as the base standard -->
+    <rule ref="PSR12"/>
+
+    <!-- Paths to check -->
+    <file>src/app</file>
+    <file>src/includes</file>
+    <file>tests</file>
+
+    <!-- Exclude vendor directory -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/cache/*</exclude-pattern>
+    <exclude-pattern>*/tmp/*</exclude-pattern>
+
+    <!-- Test bootstrap is executable and doesn't follow library-style PSR structure -->
+    <exclude-pattern>tests/bootstrap_tests.php</exclude-pattern>
+
+    <!-- These are useful signals but too noisy; report them without failing the build -->
+    <rule ref="Generic.Files.LineLength.TooLong">
+        <severity>0</severity>
+    </rule>
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Show progress -->
+    <arg value="p"/>
+
+    <!-- Show sniff codes in all reports -->
+    <arg value="s"/>
+
+    <!-- Use colors in output -->
+    <arg name="colors"/>
+
+    <!-- Only check PHP files -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Check in parallel for better performance -->
+    <arg name="parallel" value="75"/>
+</ruleset>
