@@ -6,7 +6,7 @@ Minimal skeleton application using the [CrisperCode Framework](https://github.co
 
 ```bash
 # Create new project
-composer create-project --repository='{"type":"path","url":"/path/to/skeleton"}' crispercode/skeleton my-app
+composer create-project --repository='{"type":"vcs","url":"git@github.com:chrishksang/crispercode-skellington.git"}' crispercode/skeleton my-app
 cd my-app
 
 # Start development server
