@@ -25,8 +25,7 @@ use Slim\Views\Twig;
 use function DI\factory;
 use function DI\get;
 
-return function(): Container
-{
+return function (): Container {
     // Disable error reporting in non-development environments
     if (getenv('ENVIRONMENT') !== 'development') {
         error_reporting(0);
