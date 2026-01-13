@@ -9,8 +9,13 @@ use CrisperCode\Cache\Cache;
 use CrisperCode\Cache\CacheBackendInterface;
 use CrisperCode\Cache\DatabaseCacheBackend;
 use CrisperCode\Config\FrameworkConfig;
+use CrisperCode\Console\Command\WorkCommand;
 use CrisperCode\Database\DatabaseFactory;
 use CrisperCode\EntityFactory;
+use CrisperCode\EntityManager\QueueJobManager;
+use CrisperCode\Queue\Backend\DatabaseQueueBackend;
+use CrisperCode\Queue\QueueBackendInterface;
+use CrisperCode\Service\QueueService;
 use CrisperCode\Twig\TwigFactory;
 use CrisperCode\Utils\LoggerFactory;
 use CrisperCode\Utils\PerformanceMonitor;
@@ -80,6 +85,24 @@ return function (): Container {
         // Cache service with pluggable backend
         Cache::class => factory(function (CacheBackendInterface $backend): Cache {
             return new Cache($backend);
+        }),
+
+        // Queue system - database backend
+        QueueJobManager::class => factory(function (MeekroDB $db, EntityFactory $ef): QueueJobManager {
+            return new QueueJobManager($db, $ef);
+        }),
+
+        QueueBackendInterface::class => factory(function (QueueJobManager $manager, MeekroDB $db): QueueBackendInterface {
+            return new DatabaseQueueBackend($manager, $db);
+        }),
+
+        QueueService::class => factory(function (QueueBackendInterface $backend, LoggerInterface $logger): QueueService {
+            return new QueueService($backend, $logger);
+        }),
+
+        // Queue worker command
+        WorkCommand::class => factory(function (QueueBackendInterface $backend, LoggerInterface $logger, \Psr\Container\ContainerInterface $container): WorkCommand {
+            return new WorkCommand($backend, $logger, $container);
         }),
 
         // Add your application-specific services here
