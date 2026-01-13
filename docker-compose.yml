@@ -12,10 +12,12 @@ services:
       - "./:/srv:rw"
       - "./Caddyfile:/etc/frankenphp/Caddyfile:ro"
       - "sessions:/sessions:rw"
+      - "db:/mnt/db:rw"
     env_file:
       - .env
     environment:
       FRANKENPHP_WATCH: "watch"
 
 volumes:
+  db:
   sessions:
